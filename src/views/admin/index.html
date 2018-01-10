@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Admin your Open LED Board</title>
+  <link rel="stylesheet" type="text/css" href="../css/index.css">
+</head>
+<body id="admin">
+
+<div id="page-wrapper">
+  <!-- start header -->
+  <header id="main-header" class="bg-inverse" role="banner" aria-label="Main Header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 navbar">
+          <a href="/" class="navbar-brand logo">Open LED Board Admin</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- end header -->
+  <main role="main" aria-label="Main Content">
+    <div class="container-fluid">
+      <fieldset>
+        <legend>Settings</legend>
+        <div class="row">
+          <div class="col-12">
+            <label for="module-input">Moduels:</label>
+            <input type="number" id="module-input" min="1" max="5">
+          </div>
+          <div class="col-12">
+            <label for="wifiname-input">Enter Wifi Name:</label>
+            <input type="text" id="wifiname-input">
+          </div>
+          <div class="col-12">
+            <label for="wifipassword-input">Enter Wifi Password:</label>
+            <input type="text" id="wifipassword-input">
+          </div>
+          <div class="col-12">
+            <label for="open-wifi-yes">OpenWifi: yes</label>
+            <input type="radio" id="open-wifi-yes" name="open-wifi">
+            <label for="open-wifi-no">no</label>
+            <input type="radio" id="open-wifi-no" name="open-wifi" checked>
+          </div>
+          <div class="col-12">
+            <label for="show-srn-yes">Show SRN: yes</label>
+            <input type="radio" id="show-srn-yes" name="show-srn">
+            <label for="show-srn-no">no</label>
+            <input type="radio" id="show-srn-no" name="show-srn" checked>
+          </div>
+          <div class="col-12">
+            <label for="post-input">Posts: </label>
+            <input type="text" id="post-input">
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn btn-primary" id="send-settings">Send to Board</button>
+          </div>
+        </div>
+      </fieldset>
+
+    </div>
+  </main>
+
+  <!-- start footer -->
+  <footer role="contentinfo" aria-label="Main Footer">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 text-center">
+          <!--footer is here-->
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- end footer -->
+
+</div>
+
+<script type="text/javascript" src="../js/index.js"></script>
+
+
+</body>
+</html>

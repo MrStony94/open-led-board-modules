@@ -1,0 +1,19 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+#settings{
+  &__header{
+    background-color: #4C4D4F;
+    h2{
+      color: #ffffff;
+    }
+  }
+  &__colorText{
+    height: 1rem;
+    width: 1.75rem;
+  }
+  &__colorBg{
+    height: 1rem;
+    width: 1.75rem;
+  }
+}

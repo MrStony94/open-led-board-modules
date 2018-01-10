@@ -1,0 +1,1 @@
+This is the directory for the HTML templates of the pages.

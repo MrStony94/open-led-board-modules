@@ -1,0 +1,56 @@
+@import "bootstrap-variables";
+@import "bootstrap";
+
+.tab-content{
+  #Post{
+
+    label{
+      margin-top: 10px;
+    }
+    #collapse-card{
+      background-color: #E1E1E1;
+    }
+    .submit-button{
+      button{
+        margin: 10px;
+      }
+    }
+  }
+}
+.settings-button{
+  button{
+    float: right;
+    margin-top: 1.2rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.textFieldArea{
+  padding-top: 1.2rem;
+}
+
+.preview{
+  margin-top: 1.2rem;
+  background-color: #C3C3C3;
+  border-radius: 5px;
+  &__figuer{
+
+  }
+  &__caption{
+    padding: 0 0.5rem;
+    font-weight: bold;
+  }
+  &__container{
+    background-color: white;
+    border-radius: 5px;
+    border: 0.5rem solid #C3C3C3;
+  }
+  &__box{
+
+  }
+  &__previewText{
+    padding-left: 0.5rem;
+    margin-bottom: 0rem;
+
+  }
+}

@@ -1,0 +1,9 @@
+.git
+.DS_Store
+npm-debug.log
+node_modules
+MyLedScrollBoard
+docs
+.idea
+dev
+__src

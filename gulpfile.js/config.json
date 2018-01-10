@@ -1,0 +1,136 @@
+{
+  "options": {
+    "server": {
+      "root": "dev",
+      "basePort": 8000
+    },
+    "outputDirs": {
+      "dev": {
+        "root": "dev/",
+        "app": ""
+      },
+      "export": {
+        "root": "OpenLEDBoard/",
+        "app": "data/"
+      }
+    },
+    "copy": [
+      {
+        "src": [
+          "src/arduino/**/*"
+        ],
+        "dest": "",
+        "app": false
+      },
+      {
+        "src": [
+          "src/views/**/*",
+          "!src/views/**/README.md"
+        ],
+        "dest": "",
+        "app": true
+      },
+      {
+        "src": [
+          "src/fonts/**/*"
+        ],
+        "dest": "fonts/",
+        "app": true
+      }
+    ],
+    "babel": {
+      "entry": "src/js/index.js",
+      "dest": "js/",
+      "destFile": "index.js"
+    },
+    "images": {
+      "src": "src/img/**/*",
+      "dest": "img/",
+      "quality": {
+        "optimizationLevel": 7,
+        "progressive": true,
+        "interlaced": true
+      }
+    },
+    "scss": {
+      "entry": [
+        "src/scss/index.scss"
+      ],
+      "dest": "css/",
+      "browsers" : [
+        "ie >= 9",
+        "ie_mob >= 10",
+        "ff >= 30",
+        "chrome >= 34",
+        "safari >= 7",
+        "opera >= 23",
+        "ios >= 7",
+        "android >= 4.4",
+        "bb >= 10"
+      ]
+    },
+    "doc": {
+      "src": "src/js",
+      "dest": "docs"
+    }
+  },
+  "build": {
+    "prerequisites": [
+      "clean"
+    ],
+    "run": [
+      "copy",
+      "buildES6",
+      "images",
+      "scss",
+      "build-doc"
+    ]
+  },
+  "watch": {
+    "prerequisites": [
+      "clean"
+    ],
+    "start": [
+      "watchES6"
+    ],
+    "watch": [
+      {
+        "files": [
+          "src/views/**/*",
+          "src/fonts/**/*"
+        ],
+        "tasks": [
+          "copy"
+        ],
+        "app": true
+      },
+      {
+        "files": [
+          "src/arduino/**/*"
+        ],
+        "tasks": [
+          "copy"
+        ],
+        "app": false
+      },
+      {
+        "files": [
+          "src/img/**/*"
+        ],
+        "tasks": [
+          "images"
+        ],
+        "app": true
+      },
+      {
+        "files": [
+          "src/scss/**/*"
+        ],
+        "tasks": [
+          "scss"
+        ],
+        "app": true
+      }
+    ]
+  }
+}

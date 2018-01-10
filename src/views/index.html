@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+
+    <title>LED ScrollBoard</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+</head>
+<body>
+
+<header role="banner">
+    <div class="jumbotron">
+        <h1>Led Scrollboard</h1>
+        <p>Write what you think and have fun!</p>
+    </div>
+</header>
+<div class="container">
+    <main role="main">
+        <!-- Tablist -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="tab1" aria-controls="postTab" role="link" aria-selected="true"
+                   data-toggle="tab" href="#Post">POST</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab2" role="tab" aria-controls="liveTab" role="link" aria-selected="false"
+                   data-toggle="tab" href="#liveTap">LIVE</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" role="tabpanel" id="postTab" aria-labelledby="tab1" aria-label="Post">
+            <h2 class="sr-only">Post</h2>
+            <section class="tab-pane active" id="Post" role="tabpanel">
+                <form role="form" id="form">
+                    <div class="settings-button">
+                        <button type="button" id="settingsBtn" class="btn btn-primary" data-toggle="modal"
+                                data-target="#modal__settings" role="button" aria-label="Settings"
+                                aria-describedby="settingsButton">
+                            Settings
+                        </button>
+                        <span id="settingsButton">Configure your Text</span>
+                    </div>
+                    <div class="modal fade" id="modal__settings" tabindex="-1" role="dialog" aria-label="Modal-Settings"
+                         aria-modal="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" id="settings">
+                                <div class="modal-header" id="settings__header" role="heading">
+                                    <h2>Settings</h2>
+                                    <button type="button" class="close" data-dismiss="modal" role="button"
+                                            aria-label="Close" aria-describedby="settingsClose">
+                                        <span aria-hidden="true">X</span>
+                                        <span class="sr-only" id="settingsClose">Close settings</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="settings__body">
+                                    <div class="textSettings" id="settings__text">
+                                        <fieldset>
+                                            <legend>Text</legend>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="settings__delayText">Delay:</label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <input type="range" class="form-control" name="settings__delayText"
+                                                           id="settings__delayText"
+                                                           value="20" min="0" max="30" step="1" role="slider"
+                                                           aria-label="Text-Delay" aria-valuenow="20" aria-valuemin="0"
+                                                           aria-valuemax="30">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="settings__brightnessText">Brightness:</label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <input type="range" class="form-control"
+                                                           name="settings__brightnessText"
+                                                           id="settings__brightnessText"
+                                                           value="28" min="0" max="30" step="1" role="slider"
+                                                           aria-label="Text-Brightness" aria-valuenow="28"
+                                                           aria-valuemin="0" aria-valuemax="30">
+                                                </div>
+                                            </div>
+                                            <label for="settings__colorText">Color:</label>
+                                            <input type="color" name="settings__colorText" id="settings__colorText"
+                                                   aria-label="Text-Color">
+
+                                        </fieldset>
+                                    </div>
+                                    <div class="backgroundSettings" id="settings__background">
+                                        <fieldset>
+                                            <legend>Background</legend>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="settings__delayBg">Delay:</label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <input type="range" class="form-control" name="settings__delayBg"
+                                                           id="settings__delayBg" role="slider"
+                                                           aria-label="Background-Delay"
+                                                           value="23" min="0" max="30" step="1" aria-valuenow="23"
+                                                           aria-valuemin="0" aria-valuemax="30">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="settings__brightnessBg">Brightness:</label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <input type="range" class="form-control"
+                                                           name="settings__brightnessBg"
+                                                           id="settings__brightnessBg" role="slider"
+                                                           aria-label="Background-Brightness"
+                                                           value="16" min="0" max="30" step="1" aria-valuenow="16"
+                                                           aria-valuemin="0" aria-valuemax="30">
+                                                </div>
+                                            </div>
+                                            <input type="radio" id="settings__rainbowRadioBg" name="background"
+                                                   role="radio" aria-checked="true" aria-label="Rainbow" checked>
+                                            <label for="settings__rainbowRadioBg">Rainbow</label>
+                                            <input type="radio" id="settings__colorRadioBg" name="background"
+                                                   role="radio" aria-checked="false" aria-label="Color">
+                                            <label for="settings__colorRadioBg">Color</label>
+                                            <br>
+                                            <label for="settings__colorBG">Color:</label>
+                                            <input type="color" name="colorBg" id="settings__colorBg"
+                                                   aria-label="Background-Color" value="#ffffff">
+                                        </fieldset>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer" id="settings__footer">
+                                    <button type="button" class="btn btn-primary" value="save" data-dismiss="modal"
+                                            id="settings__saveBtn" aria-describedby="settingsSave" role="button"
+                                            aria-label="Save-Settings">Save
+                                    </button>
+                                    <span id="settingsSave"> Save values </span>
+                                    <button type="button" class="btn btn-primary" value="cancel" data-dismiss="modal"
+                                            id="settings__cancelBtn" role="button" aria-label="Cancel-Settings"
+                                            aria-describedby="settingsCancel">Cancel
+                                    </button>
+                                    <span id="settingsCancel"> Reset values</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="textFieldArea">
+                        <label for="textinput">Enter your Text here:</label>
+                        <div class="input-group" id="input-group">
+                            <input type="text" class="form-control" id="textInput" aria-describedby="basic-addon1"
+                                   placeholder="Sample Text" value="Sample Text" role="textbox" aria-label="TextInput">
+                            <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" data-toggle="collapse"
+                                data-target="#collapseIcons" role="button" aria-label="Icons"
+                                aria-describedby="openCollapse">Icons</button>
+                                <span id="openCollapse"> Open Collapse</span>
+                    </span>
+                        </div>
+                    </div>
+
+
+                    <div class="collapse" id="collapseIcons">
+                        <div class="__card card-body" id="collapse-card" aria-label="Collapse">
+                            <!-- TODO: Add Icons -->
+                            <p>Coming soon!</p>
+                        </div>
+                    </div>
+                    <div class="preview">
+                        <figure class="preview__figure">
+                            <figcaption class="preview__caption" role="presentation" aria-label="Preview">Preview:
+                            </figcaption>
+                            <div class="preview__container" id="previewContainer">
+                                <div class="preview__box">
+                                    <p class="preview__previewText" id="previewText">Sample Text</p>
+                                </div>
+                            </div>
+
+                        </figure>
+                    </div>
+                    <div class="submitButton">
+                        <button type="button" class="btn btn-primary" id="submitBtn" role="button"
+                                aria-label="Submit-Button" value="submit" aria-describedby="submitButton">Submit
+                        </button>
+                        <span id="submitButton"></span>
+                    </div>
+                </form>
+
+            </section>
+            <section class="tab-pane" id="liveTap" aria-labelledby="tab2" role="tabpanel" aria-label="Live">
+                <!--TODO: add live tab-->
+                <h2 class="sr-only">Live</h2>
+                <p>Coming soon!</p>
+            </section>
+        </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer__container">
+            <span>Impressum </span>
+        </div>
+
+    </footer>
+
+</div>
+
+<script type="text/javascript" src="js/index.js"></script>
+
+</body>
+</html>

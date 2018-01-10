@@ -1,0 +1,20 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+//$myPrimary: #186a3b;
+$myPrimary: #4C4D4F;
+
+
+$theme-colors: (
+        primary: $myPrimary,
+        secondary: $gray-600,
+        success: $green,
+        info: $cyan,
+        warning: $yellow,
+        danger: $red,
+        light: $gray-100,
+        dark: $gray-800
+);
+
+//$link-color:            theme-color("primary");
+$link-color:           $myPrimary;

@@ -98,6 +98,7 @@ void on_scroll() {
   }
   server.send(200, "text/html", "{\"result\":1}");
   pixelupdate=1;
+  updateStruct=true;
 }
 
 void on_change_color() {
@@ -126,7 +127,7 @@ void on_admin(){
     //password = toCharArray(pass,pass_len);
   }
   if(server.hasArg("post")){
-    post = server.arg("post");
+    postings = server.arg("post");
   }
-  boolean succes = writeConfig(modules, post);
+  boolean succes = write_config(modules, ap_name, post);
 }

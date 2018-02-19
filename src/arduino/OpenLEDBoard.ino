@@ -16,7 +16,8 @@
 // connect an led to Pin5 (D1) to indicate main loop operation
 // connect a momentary switch to Pin4 (D2) - when pressed at startup/reset, captive portal/DNS is not used
 //
-
+#include <stdio.h>
+#include <string.h>
 #include <FS.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -49,6 +50,8 @@
 
 #define UNIQUE_AP_NAME
 
+#define LEN 100
+
 // Neopixel object
 // this uses GPIO3 (marked as RX on the AT-Thinker ESP12 board)
 // this is a hardware restriction because of DMA access, see NeoPixelBus documentation!
@@ -65,6 +68,8 @@ byte bg_mode = BG_MODE_RAINBOW;
 byte bg_brightness = 30;
 uint16_t bg_wait = 20;
 uint32_t bg_color = 0x0000a0;
+int struct_current_pos_save = 0;
+int struct_current_pos_show = 0;
 
 String scrolltext = "       hello !  this is the open led billboard.    to post your message: connect to WiFi LedScrollBoard !      ";
 byte scrollindex = 0;
@@ -72,7 +77,8 @@ byte scroll_mode=1;
 byte scroll_brightness = 200;
 uint16_t scrollwait = 40;
 uint32_t scrollcolor = 0xa0a000;
-String post = "";
+const char* post = "";
+String postings = "";
 
 uint32_t icons[MAX_ICONS][ICON_PIXELS+1] = { 0 }; // icon buffer. this holds up to 10 icons
 uint16_t anim_wait = 100;
@@ -88,7 +94,7 @@ uint32_t pixels[NUM_LEDS];    // pixel buffer. this buffer allows you to set arb
 
                               // brightness without destroying the original color values
 // Forward declare functions
-String get_ap_name();
+//String get_ap_name();
 void button_handler();
 void on_status();
 void on_change_color();
@@ -97,6 +103,7 @@ void on_scroll();
 void on_icon();
 void on_homepage();
 void on_admin();
+void on_error();
 void show_leds();
 void background_rainbow();
 void update_background();
@@ -113,11 +120,26 @@ byte ledstate=0;
 volatile boolean button_clicked = false;
 boolean load_admin_space = false;
 const char* password = "Admin1234";
-boolean success = false;
+boolean success_conf = false;
 uint8_t modules = 1;
 uint8_t open_wifi = 0;
 uint8_t show_srn = 0;
-String ap_name;
+String ap_name = "LEDScrollBoard";
+
+struct Post{
+  String scrolltext;
+  byte scrollBrightness;
+  uint16_t scrollWait;
+  uint32_t scrollColor;
+  byte bgMode;
+  byte bgBrightness;
+  uint16_t bgWait;
+  uint32_t bgColor;
+}posts[LEN];
+boolean updateStruct = true;
+
+
+
 
 
 void setup() {
@@ -131,7 +153,7 @@ void setup() {
   pinMode(PIN_LED,    OUTPUT);
 
   // Set WiFi SSID
-  ap_name = get_ap_name();
+
   WiFi.persistent(false);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
@@ -144,7 +166,6 @@ void setup() {
   SPIFFS.begin();
   Serial.printf("\n\nHi ! I have these files in my folder:\n");
   Serial.println(" read config.json");
-  success = readConfig();
   {
     Dir dir = SPIFFS.openDir("/");
     while (dir.next()) {
@@ -172,28 +193,33 @@ void setup() {
   });
   server.begin();
 
+  boolean succes = read_config();
+
   // press button to start admin space
   if (digitalRead(PIN_BUTTON) == LOW) {
      dnsServer.start(DNS_PORT, "*", apIP);
      serve_dns_requests=1;
-     bg_mode = BG_MODE_FILL;
+     posts[struct_current_pos_show].bgMode = BG_MODE_FILL;
      WiFi.softAP(ap_name.c_str(),password);
      load_admin_space=true;
   } else {
      dnsServer.start(DNS_PORT, "*", apIP);
      serve_dns_requests=1;
-     bg_mode = BG_MODE_RAINBOW;
+     posts[struct_current_pos_show].bgMode = BG_MODE_RAINBOW;
      WiFi.softAP(ap_name.c_str());
      load_admin_space=false;
   }
 
   // Set button handler
   attachInterrupt(PIN_BUTTON, button_handler, FALLING);
-  boolean success = readConfig();
+  // boolean success_conf = read_config();
 
   // Initialize LEDs
   leds.Begin();
   leds.Show();
+
+
+
 }
 
 void loop() {
@@ -204,28 +230,48 @@ void loop() {
   server.handleClient();
   ledstate=!ledstate;
   digitalWrite(PIN_LED,ledstate);
+  if(updateStruct){
+    if (struct_current_pos_save >= LEN){
+      struct_current_pos_save = 0;
+    }
+    posts[struct_current_pos_save].scrolltext = "       " + scrolltext + "       ";
+    Serial.println(posts[struct_current_pos_save].scrolltext);
+    posts[struct_current_pos_save].scrollWait = scrollwait;
+    Serial.println(posts[struct_current_pos_save].scrollWait);
+    posts[struct_current_pos_save].scrollBrightness = scroll_brightness;
+    Serial.println(posts[struct_current_pos_save].scrollBrightness);
+    posts[struct_current_pos_save].scrollColor = scrollcolor;
+    Serial.println(posts[struct_current_pos_save].scrollColor);
+    posts[struct_current_pos_save].bgMode = bg_mode;
+    Serial.println(posts[struct_current_pos_save].bgMode);
+    posts[struct_current_pos_save].bgBrightness = bg_brightness;
+    Serial.println(posts[struct_current_pos_save].bgBrightness);
+    posts[struct_current_pos_save].bgWait = bg_wait;
+    Serial.println(posts[struct_current_pos_save].bgWait);
+    posts[struct_current_pos_save].bgColor = bg_color;
+    Serial.println(posts[struct_current_pos_save].bgColor);
+    struct_current_pos_save++;
+    Serial.println(struct_current_pos_save);
+    updateStruct = false;
+    Serial.println(updateStruct);
+  }
 
   if(button_clicked) {
     //bg_mode ++;  // upon button click, change background mode
     button_clicked = false;
     //pixelupdate=1;
-    Serial.println(" write config.json");
-    success = writeConfig();
-    String[] test = ["1","2"];
-    if (string.hasnex
-
-
+    //Serial.println(" write config.json");
+    //success_conf = writeConfig();
+    //String[] test = ["1","2"];
+    //if (string.hasnex
   }
-
   update_background();
   update_scrolltext();
   update_icons ();
-
   if (pixelupdate) {
     pixelupdate=0;
     show_leds();
   }
-
   if ((!(counter % 100)) && (!get_brightness_web)) {
     byte new_brightness=analogRead(A0)>>2;
     if (brightness!=new_brightness) {
@@ -233,6 +279,16 @@ void loop() {
       Serial.println(new_brightness);
     }
     brightness=new_brightness;
+  }
+  /*if (struct_current_pos_show < (sizeof posts / sizeof posts[0])){
+    struct_current_pos_show++;
+  }else{
+    struct_current_pos_show = 0;
+  }*/
+  if(struct_current_pos_save > struct_current_pos_show){
+    struct_current_pos_show++;
+  }else{
+    struct_current_pos_show = 0;
   }
 
   counter++;   // global counter for timing activities
@@ -258,18 +314,18 @@ uint32_t getRGBColor(uint8_t r, uint8_t g, uint8_t b) {
 uint32_t wheel(int WheelPos) {
   WheelPos = 255 - WheelPos;
   if(WheelPos < 85) {
-    return adjust_brightness(getRGBColor(255 - WheelPos * 3, 0, WheelPos * 3),bg_brightness);  }
+    return adjust_brightness(getRGBColor(255 - WheelPos * 3, 0, WheelPos * 3),posts[struct_current_pos_show].bgBrightness);  }
   if(WheelPos < 170) {
     WheelPos -= 85;
-    return adjust_brightness(getRGBColor(0, WheelPos * 3, 255 - WheelPos * 3),bg_brightness);  }
+    return adjust_brightness(getRGBColor(0, WheelPos * 3, 255 - WheelPos * 3),posts[struct_current_pos_show].bgBrightness);  }
   WheelPos -= 170;
-  return adjust_brightness(getRGBColor(WheelPos * 3, 255 - WheelPos * 3, 0),bg_brightness);
+  return adjust_brightness(getRGBColor(WheelPos * 3, 255 - WheelPos * 3, 0),posts[struct_current_pos_show].bgBrightness);
 }
 
 void background_rainbow() {
   static byte idx = 0;
 
-  if (!(counter%bg_wait)) {
+  if (!(counter%posts[struct_current_pos_show].bgMode)) {
     idx++; pixelupdate=1;
   }
 
@@ -280,17 +336,17 @@ void background_rainbow() {
 
 
 void update_background()  {
-  switch(bg_mode) {
+  switch(posts[struct_current_pos_show].bgMode) {
     case BG_MODE_FILL:
       for(int i=0;i<NUM_LEDS;i++)
-        pixels[i]=adjust_brightness(bg_color,bg_brightness);
+        pixels[i]=adjust_brightness(posts[struct_current_pos_show].bgColor,posts[struct_current_pos_show].bgBrightness);
       break;
 
     case BG_MODE_RAINBOW:
         background_rainbow();
       break;
 
-    default: bg_mode=BG_MODE_FILL;
+    default: posts[struct_current_pos_show].bgMode=BG_MODE_FILL;
       break;
   }
 }
@@ -348,7 +404,7 @@ void drawFontCol(char c, int i){
     for(int j = 0; j < 7; j++){
         if (!(i%2)) pos=6-j; else pos=j; // reverse every second column !
         if(c & 0x1){
-            pixels[i*7+pos]=adjust_brightness(scrollcolor,scroll_brightness);
+            pixels[i*7+pos]=adjust_brightness(posts[struct_current_pos_show].scrollColor,posts[struct_current_pos_show].scrollBrightness);
         }
         c >>= 1;
     }
@@ -370,17 +426,18 @@ void drawChar(char c, int offset){
 
 void update_scrolltext() {
   static byte pos_in_char=0;
-  if (!scrolltext.length()) return;
-  if (!(counter%scrollwait)) {
+  if (!posts[struct_current_pos_show].scrolltext.length()) return;
+  if (!(counter%posts[struct_current_pos_show].scrollWait)) {
     pos_in_char=(pos_in_char+1)%6;
-    if (!pos_in_char) scrollindex = (scrollindex+1)%scrolltext.length();
+    if (!pos_in_char) scrollindex = (scrollindex+1)%posts[struct_current_pos_show].scrolltext.length();
     pixelupdate=1;
   }
 
   for(byte k = 0; k < (NUM_COLUMNS/5)+1; k++){
-      drawChar(scrolltext.charAt(scrollindex+k),pos_in_char - k*6);
+      drawChar(posts[struct_current_pos_show].scrolltext.charAt(scrollindex+k),pos_in_char - k*6);
       drawFontCol(0,5-pos_in_char+k*6);
   }
+
 }
 
 
@@ -409,7 +466,7 @@ char dec2hex(byte dec) {
 
 // AP name is ESP_ following by
 // the last 6 bytes of MAC address
-String get_ap_name() {
+/*String get_ap_name() {
  static String ap_name = "MyLedScrollBoard";
 
  #ifdef UNIQUE_AP_NAME
@@ -421,7 +478,7 @@ String get_ap_name() {
     }
   #endif
   return ap_name;
-}
+}*/
 
 void button_handler() {
   button_clicked = true;
@@ -494,3 +551,51 @@ String formatBytes(size_t bytes){
     return String(bytes/1024.0/1024.0/1024.0)+"GB";
   }
 }
+
+bool read_config() {
+  File configFile = SPIFFS.open("/config.json","r");
+  if (!configFile){
+    Serial.print("Failed to open config file");
+    return false;
+  }
+  size_t size = configFile.size();
+  if (size > 1024) {
+    Serial.println("Config file size is too large");
+    return false;
+  }
+
+  std::unique_ptr<char[]> buf(new char[size]);
+  configFile.readBytes(buf.get(), size);
+  StaticJsonBuffer<200> jsonBuffer;
+  JsonObject& json = jsonBuffer.parseObject(buf.get());
+  json.printTo(Serial);
+  if (!json.success()) {
+    Serial.println("Failed to parse config file");
+    return false;
+  }
+  json.printTo(Serial);
+  post = json["adminposts"];
+  modules = json["modules"];
+  //password = json["password"];
+  ap_name = json["apname"].asString();
+  //Serial.println(password);
+  return true;
+}
+
+bool write_config(int mod, String apname, String post) {
+  StaticJsonBuffer<200> jsonBuffer;
+  JsonObject& json = jsonBuffer.createObject();
+  json["modules"] = mod;
+  json["password"] = password;
+  json["adminposts"] = post;
+  json["apname"] = apname;
+  File configFile = SPIFFS.open("/config.json", "w");
+  if (!configFile) {
+    Serial.println("Failed to open config file for writing");
+    return false;
+  }
+  json.printTo(Serial);
+  json.printTo(configFile);
+  return true;
+}
+

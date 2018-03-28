@@ -8,7 +8,9 @@ export function initAdmin(){
     const show_srn_yes = document.getElementById("show-srn-yes");
     const show_srn_no = document.getElementById("show-srn-no");
     const send_btn = document.getElementById("send-settings");
-    const input_posts = document.getElementById("post-input");
+    const input_post1 = document.getElementById("post-input1");
+    const input_post2 = document.getElementById("post-input2");
+    const input_post3 = document.getElementById("post-input3");
 
     send_btn.addEventListener('click', ()=>{
         const xhr = new XMLHttpRequest();
@@ -24,8 +26,9 @@ export function initAdmin(){
         } else if (show_srn_no.checked){
             show_srn = 0;
         }
-        if(input_modules!=="" && input_wifiname !== "" && input_wifipassword!==""){
-            let string = "http://192.168.4.1/as?modules=" + input_modules.value + "&wifiname=" + input_wifiname.value + "&wifipassword=" + input_wifipassword.value + "&openwifi=" + open_wifi + "&showsrn=" + show_srn + "&post=" + input_posts.value;
+
+        if(input_modules.value !== "" && input_wifiname.value !== "" && input_wifipassword.value !== "" && input_post1.value !== "" && input_post2.value !== "" && input_post3.value !== ""){
+            let string = "http://192.168.4.1/as?modules=" + input_modules.value + "&wifiname=" + input_wifiname.value + "&wifipassword=" + input_wifipassword.value + "&openwifi=" + open_wifi + "&showsrn=" + show_srn + "&post1=" + input_post1.value +  "&post2=" + input_post2.value + "&post3=" + input_post3.value;
 
             xhr.open('get',string,true);
             xhr.send();

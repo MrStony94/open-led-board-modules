@@ -13,7 +13,7 @@ void on_homepage() {
 
 void on_error(){
   if (!load_admin_space){
-    server.send(403, "text/html", "html");
+    server.send(403, "text/html", "ERROR 403 - Access forbidden!");
   }
   else{
     handleFileRead("/admin/index.html");

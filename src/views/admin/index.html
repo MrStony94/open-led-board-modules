@@ -26,34 +26,76 @@
       <fieldset>
         <legend>Settings</legend>
         <div class="row">
-          <div class="col-12">
+          <div class="col-2">
             <label for="module-input">Moduels:</label>
+          </div>
+          <div class="col-10">
             <input type="number" id="module-input" min="1" max="5">
           </div>
-          <div class="col-12">
-            <label for="wifiname-input">Enter Wifi Name:</label>
-            <input type="text" id="wifiname-input">
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <span>OpenWifi:</span>
           </div>
-          <div class="col-12">
-            <label for="wifipassword-input">Enter Wifi Password:</label>
-            <input type="text" id="wifipassword-input">
-          </div>
-          <div class="col-12">
-            <label for="open-wifi-yes">OpenWifi: yes</label>
+          <div class="col-10">
+            <label for="open-wifi-yes">yes</label>
             <input type="radio" id="open-wifi-yes" name="open-wifi">
             <label for="open-wifi-no">no</label>
             <input type="radio" id="open-wifi-no" name="open-wifi" checked>
           </div>
-          <div class="col-12">
-            <label for="show-srn-yes">Show SRN: yes</label>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <span>Show SRN:</span>
+          </div>
+          <div class="col-10">
+            <label for="show-srn-yes">yes</label>
             <input type="radio" id="show-srn-yes" name="show-srn">
             <label for="show-srn-no">no</label>
             <input type="radio" id="show-srn-no" name="show-srn" checked>
           </div>
-          <div class="col-12">
-            <label for="post-input">Posts: </label>
-            <input type="text" id="post-input">
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label for="wifiname-input">Enter Wifi Name:</label>
           </div>
+          <div class="col-10">
+            <input type="text" id="wifiname-input">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label for="wifipassword-input">Enter Wifi Password:</label>
+          </div>
+          <div class="col-10">
+            <input type="text" id="wifipassword-input">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label for="post-input1">Post 1: </label>
+          </div>
+          <div class="col-10">
+            <input type="text" id="post-input1">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label for="post-input2">Post 2: </label>
+          </div>
+          <div class="col-10">
+            <input type="text" id="post-input2">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label for="post-input3">Post 3: </label>
+          </div>
+          <div class="col-10">
+            <input type="text" id="post-input3">
+          </div>
+        </div>
+        <div class="row">
           <div class="col-12">
             <button type="button" class="btn btn-primary" id="send-settings">Send to Board</button>
           </div>

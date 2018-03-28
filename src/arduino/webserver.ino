@@ -30,19 +30,20 @@ byte scale_brightness(byte val) {
 
 void on_background() {
   if(server.hasArg("mode")) {
-    bg_mode = server.arg("mode").toInt();
+    bg_mode_new = server.arg("mode").toInt();
   }
   if(server.hasArg("wait")) {
-    bg_wait = scale_wait(server.arg("wait").toInt());
+    bg_wait_new = scale_wait(server.arg("wait").toInt());
   }
   if(server.hasArg("color")) {
-    bg_color = strtol(server.arg("color").c_str(), NULL, 16);
+    bg_color_new = strtol(server.arg("color").c_str(), NULL, 16);
   }
   if(server.hasArg("brightness")) {
-    bg_brightness = scale_brightness(server.arg("brightness").toInt());
+    bg_brightness_new = scale_brightness(server.arg("brightness").toInt());
   }
   server.send(200, "text/html", "{\"result\":1}");
-  pixelupdate=1;
+  //pixelupdate=1;
+  updateStruct = true;
 }
 
 void on_icon() {
@@ -71,34 +72,33 @@ void on_icon() {
 void on_scroll() {
   int iconpos=0;
   if(server.hasArg("scrolltext")) {
-    scrolltext = server.arg("scrolltext");
-    scrolltext = " "+scrolltext;
+    scrolltext_new = "     "+server.arg("scrolltext");
     // check for icon in scrolltext
-    while ((iconpos=scrolltext.indexOf('$',iconpos)) > -1)
+    while ((iconpos=scrolltext_new.indexOf('$',iconpos)) > -1)
     {
-       uint8_t c =scrolltext[iconpos+1];
+       uint8_t c =scrolltext_new[iconpos+1];
        if ((c>='1') && (c<='9')) {
-          scrolltext[iconpos+1]= c-'0'+9;  // this will identify the icon number !
-          scrolltext.remove(iconpos,1);
+          scrolltext_new[iconpos+1]= c-'0'+9;  // this will identify the icon number !
+          scrolltext_new.remove(iconpos,1);
        } else iconpos++;
     }
-    scrollindex = 0;
+    //scrollindex = 0;
   }
   if(server.hasArg("wait")) {
-    scrollwait = scale_wait(server.arg("wait").toInt());
+    scrollwait_new = scale_wait(server.arg("wait").toInt());
   }
   if(server.hasArg("color")) {
-    scrollcolor = strtol(server.arg("color").c_str(), NULL, 16);
+    scrollcolor_new = strtol(server.arg("color").c_str(), NULL, 16);
   }
   if(server.hasArg("mode")) {
     scroll_mode = server.arg("mode").toInt();
   }
   if(server.hasArg("brightness")) {
-    scroll_brightness = scale_brightness(server.arg("brightness").toInt());
+    scroll_brightness_new = scale_brightness(server.arg("brightness").toInt());
   }
   server.send(200, "text/html", "{\"result\":1}");
-  pixelupdate=1;
-  updateStruct=true;
+  //pixelupdate=1;
+  //updateStruct=true;
 }
 
 void on_change_color() {
@@ -119,15 +119,20 @@ void on_admin(){
     modules = server.arg("modules").toInt();
   }
   if(server.hasArg("wifiname")){
-    ap_name=server.arg("wifiname");
+    user_ap_name=server.arg("wifiname");
   }
   if(server.hasArg("wifipassword")){
-    //char* pass = server.arg("wifipassword");
-    //byte pass_len = pass.length;
-    //password = toCharArray(pass,pass_len);
+    password = server.arg("wifipassword");
   }
-  if(server.hasArg("post")){
-    postings = server.arg("post");
+  if(server.hasArg("post1")){
+    default_post1 = server.arg("post1");
   }
-  boolean succes = write_config(modules, ap_name, post);
+  if(server.hasArg("post2")){
+    default_post2 = server.arg("post2");
+  }
+  if(server.hasArg("post3")){
+    default_post3 = server.arg("post3");
+  }
+  boolean successWrite = write_config(modules, user_ap_name, default_post1, default_post2, default_post3, password);
+  server.send(200, "text/html", "{\"result\":1}");
 }

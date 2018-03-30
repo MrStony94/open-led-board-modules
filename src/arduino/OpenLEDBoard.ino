@@ -17,6 +17,8 @@
 //
 
 #include <FS.h>
+#include <stdio.h>
+#include <string.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <DNSServer.h>
@@ -25,18 +27,18 @@
 #include "font5x7.h"
 
 #define BIG_BOARD
-// #define UNIQUE_AP_NAME    // uncomment this if you want to use multiple boards 
+// #define UNIQUE_AP_NAME    // uncomment this if you want to use multiple boards
 
 #define PIN_BUTTON  4    // marked as D2 on AI-Thinker ESP12 board !
 #define PIN_LED     5    // marked as D1 on AI-Thinker ESP12 board !
 
 #ifdef BIG_BOARD
-  #define NUM_COLUMNS 41    // big board hast 41 columns 
+  #define NUM_COLUMNS 41    // big board hast 41 columns
   #define ICON_OFFSET 44
 #else
-  #define NUM_COLUMNS 8     // small demo board has 8 columns 
+  #define NUM_COLUMNS 8     // small demo board has 8 columns
   #define ICON_OFFSET 6
-#endif  
+#endif
 
 #define NUM_LEDS    NUM_COLUMNS*7   // 7 leds (rows) per column
 
@@ -69,7 +71,7 @@ uint16_t bg_wait_new = 20;
 uint32_t bg_color = 0x0000a0;
 uint32_t bg_color_new = 0x0000a0;
 
-String scrolltext = "     hello!"; //  this is the open led billboard.    to post your message: connect to WiFi LedScrollBoard !      
+String scrolltext = "     hello!"; //  this is the open led billboard.    to post your message: connect to WiFi LedScrollBoard !
 String scrolltext_new = "     hello!";
 byte scrollindex = 0;
 byte scroll_mode=1;
@@ -85,7 +87,7 @@ uint16_t anim_wait = 100;
 uint16_t icon_pos=0;
 uint16_t preview_acticon=0;
 byte act_icon=0,act_anim=0;
-byte icon_brightness = 200; 
+byte icon_brightness = 200;
 
 byte pixelupdate =1;
 byte brightness = 80;         // default overall brightness
@@ -172,7 +174,7 @@ void setup() {
   SPIFFS.begin();
   {
     Dir dir = SPIFFS.openDir("/");
-    while (dir.next()) {    
+    while (dir.next()) {
       String fileName = dir.fileName();
       size_t fileSize = dir.fileSize();
       Serial.printf("FS File: %s, size: %s\n", fileName.c_str(), formatBytes(fileSize).c_str());
@@ -188,36 +190,18 @@ void setup() {
   WiFi.persistent(false);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP(user_ap_name.c_str());
-
-  // WiFi.printDiag(Serial);
-  // IPAddress myIP = WiFi.softAPIP();
-  // Serial.print("AP IP address: ");
-  // Serial.println(myIP);
-  
-  // Set server callback functions
-  server.on("/",   on_homepage); 
-  server.on("/admin/index.html", on_error);   
-  server.on("/js", on_status);
-  server.on("/cc", on_change_color);
-  server.on("/bg", on_background);
-  server.on("/ic", on_icon);
-  server.on("/sc", on_scroll);
-  server.on("/as", on_admin);
-  //server.onNotFound(on_homepage);
-  server.onNotFound([](){               // try to serve another request (file?)
-    if(!handleFileRead(server.uri())) 
-      on_homepage();                      // default reply: the index.html !
-  });
-  server.begin();
-
+  //WiFi.softAP(user_ap_name.c_str());
 
   // press button on startup if you do not want a captive portal
-  if (digitalRead(PIN_BUTTON) == LOW) { 
+  if (digitalRead(PIN_BUTTON) == LOW) {
      dnsServer.start(DNS_PORT, "*", apIP);
      serve_dns_requests=1;
      bg_mode = BG_MODE_FILL;
-     const char* pw = string2char(password);
+     byte passwd_len = password.length();
+     char pw[passwd_len+1];
+     password.toCharArray(pw,(passwd_len+1));
+     Serial.println(password);
+     Serial.println(pw);
      WiFi.softAP(user_ap_name.c_str(),pw);
      load_admin_space=true;
   } else {
@@ -227,6 +211,30 @@ void setup() {
      WiFi.softAP(user_ap_name.c_str());
      load_admin_space=false;
   }
+
+  // WiFi.printDiag(Serial);
+  // IPAddress myIP = WiFi.softAPIP();
+  // Serial.print("AP IP address: ");
+  // Serial.println(myIP);
+
+  // Set server callback functions
+  server.on("/",   on_homepage);
+  server.on("/admin/index.html", on_error);
+  server.on("/js", on_status);
+  server.on("/cc", on_change_color);
+  server.on("/bg", on_background);
+  server.on("/ic", on_icon);
+  server.on("/sc", on_scroll);
+  server.on("/as", on_admin);
+  //server.onNotFound(on_homepage);
+  server.onNotFound([](){               // try to serve another request (file?)
+    if(!handleFileRead(server.uri()))
+      on_homepage();                      // default reply: the index.html !
+  });
+  server.begin();
+
+
+
      
   // Set button handler
   attachInterrupt(PIN_BUTTON, button_handler, FALLING);

@@ -125,14 +125,9 @@ void on_admin(){
     password = server.arg("wifipassword");
   }
   if(server.hasArg("post1")){
-    default_post1 = server.arg("post1");
+    default_post1 = "     " + server.arg("post1");
   }
   if(server.hasArg("post2")){
-    default_post2 = server.arg("post2");
+    default_post2 = "     " + server.arg("post2");
   }
   if(server.hasArg("post3")){
-    default_post3 = server.arg("post3");
-  }
-  boolean successWrite = write_config(modules, user_ap_name, default_post1, default_post2, default_post3, password);
-  server.send(200, "text/html", "{\"result\":1}");
-}

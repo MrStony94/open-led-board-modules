@@ -7,7 +7,7 @@ The distribution files for the Open LED Board are available in the `/OpenLEDBoar
 
 Upload the files to your Arduino and you're all set.
 
-## Participate
+## GULP
 
 ### Install
 Install gulp globally ...
@@ -116,3 +116,38 @@ To only generate the JSDoc documentation without starting a watcher and server, 
 ```
 $ gulp build-doc
 ```
+
+## Firmware
+
+### Open
+
+Open OpenLEDBoard.ino from folder /OpenLEDBoard.
+
+### Settings for Upload
+
+Select under tools:
+
+* Board: "NodeMCU 0.9 (ESÜ-12 Module)"
+* CPU Frequency: "80 Mhz"
+* Flash Size: "4M (3M SPIFFS)"
+* Upload Speed: "115200"
+* Port: Port of esp8266
+
+Aftwards press upload button
+
+## Upload Data
+
+### Download
+
+[Go to Download Site](https://github.com/esp8266/arduino-esp8266fs-plugin)
+
+### Upload
+
+* Place data the folder, with the name /data, in the /OpenLEDBoard folder.
+* Choose Tools/ESP8266 Sketch Data Upload
+
+## Modules
+
+You can find the module design in /module_design. Convert the FCStd file to a .stl file. 
+Afterwards you can put the .stl file in slicer of your choice and convert it to a gcode.
+This module can be printed on every 3D printer, if it is not to big.  

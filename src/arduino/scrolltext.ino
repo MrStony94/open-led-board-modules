@@ -66,7 +66,5 @@ void update_scrolltext() {
           nextPost(); 
           countpostsround++;
         }
-        Serial.println(scrolltext);
-        Serial.println(countpostsround);
   }
 }

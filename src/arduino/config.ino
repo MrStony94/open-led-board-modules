@@ -1,6 +1,6 @@
 //-------------------Write and Read in SPIFFS------------------------
 bool read_config() {
-  File configFile = SPIFFS.open("/config.json", "r");
+  File configFile = SPIFFS.open("/config.json", "r+");
   if (!configFile){
     Serial.print("Failed to open config file");
     Serial.println(configFile);
@@ -32,7 +32,8 @@ bool read_config() {
 }
 
 bool write_config(int mod, String apname, String post1, String post2, String post3, String passwd) {
-  File configFile = SPIFFS.open("/config.json", "w");
+  SPIFFS.remove("/config.json");
+  File configFile = SPIFFS.open("/config.json", "w+");
   if (!configFile) {
     Serial.println("Failed to open config file for writing");
     return false;
